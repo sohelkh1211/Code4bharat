@@ -100,14 +100,16 @@ const Login = () => {
                 const snapshot = await get(userRef);
                 let res = await snapshot.val();
 
-                dispatch(user({ id: data.localId, name: res.name, email: data.email, links: res?.links ? res.links : [] }));
+                console.log(res);
+                dispatch(user({ id: data.localId, name: res.name, email: data.email, links: res?.links ? res.links : {} }));
 
-                localStorage.setItem('user', JSON.stringify({ id: data.localId, name: res.name, email: data.email, links: res?.links ? links : [] }));
+                localStorage.setItem('user', JSON.stringify({ id: data.localId, name: res.name, email: data.email, links: res?.links ? res.links : {} }));
 
                 toast.success('LoggedIn Successful');
                 navigate('/user/profile', { replace: true });
             }
             catch (error) {
+                console.log(error);
                 toast.error(error.message || 'Something went wrong');
             }
         }

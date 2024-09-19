@@ -21,4 +21,12 @@
     padding-left: 10px;
     padding-right: 10px;
   }
+
+  .p-button {
+    display: flex;
+    width: fit-content;
+    gap: 0 8px;
+    padding: 5px 10px;
+    
+  }
   
