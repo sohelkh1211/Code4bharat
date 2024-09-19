@@ -25,6 +25,7 @@ const User_page = () => {
   const [updateVisible, setUpdateVisible] = useState(false);
 
   const [selectedDocument, setSelectedDocument] = useState({
+    id: '',
     name: '',
     url: ''
   });
@@ -132,6 +133,7 @@ const User_page = () => {
     if (!selectedDocument.name) {
       toast.error("Please Enter name");
       setSelectedDocument({
+        id: '',
         name: '',
         url: ''
       });
@@ -140,6 +142,7 @@ const User_page = () => {
     if (!selectedDocument.url) {
       toast.error("Please Enter URL");
       setSelectedDocument({
+        id: '',
         name: '',
         url: ''
       });
@@ -158,17 +161,22 @@ const User_page = () => {
     localStorage.setItem('user', JSON.stringify({ id: data.localId, name: res.name, email: data.email, links: res?.links ? res.links : {} }));
 
     setSelectedDocument({
+      id: '',
       name: '',
       url: ''
     });
   }
 
-  console.log(
-    Object.keys(user_details.links).map((key, index) => ({
-      name: user_details.links[key].name,
-      url: user_details.links[key].url,
-    }))
-  );
+  const handleEditSubmit = () => {
+    if(!selectedDocument.name) {
+      toast.error("Please Enter name");
+    }
+
+    toast.success("Document updated");
+    return;
+  }
+
+  console.log(selectedDocument);
   
 
   return (
@@ -196,8 +204,8 @@ const User_page = () => {
                 <td className="border border-black px-2">{index + 1}</td>
                 <td className="border border-black px-2">{user_details.links[key].name}</td>
                 <td className="whitespace-nowrap border border-black px-2"><a rel="noopener" target="_blank" href={user_details.links[key].url} className="cursor-pointer underline"><i className="pi pi-download"></i></a></td>
-                <td className="whitespace-nowrap border border-black px-2"><i className="pi pi-file-edit text-emerald-600 cursor-pointer" onClick={() => { setUpdateVisible(!updateVisible); setSelectedDocument({ name: user_details.links[key].name, url: user_details.links[key].url }) }}></i></td>
-                <td className="whitespace-nowrap border border-black px-2"><i className="pi pi-trash text-red-600 cursor-pointer" onClick={() => { setVisible(!visible); setSelectedDocument({ name: user_details.links[key].name, url: user_details.links[key].url }) }}></i></td>
+                <td className="whitespace-nowrap border border-black px-2"><i className="pi pi-file-edit text-emerald-600 cursor-pointer" onClick={() => { setUpdateVisible(!updateVisible); setSelectedDocument({ id: key,name: user_details.links[key].name, url: user_details.links[key].url }) }}></i></td>
+                <td className="whitespace-nowrap border border-black px-2"><i className="pi pi-trash text-red-600 cursor-pointer" onClick={() => { setVisible(!visible); setSelectedDocument({ id: key, name: user_details.links[key].name, url: user_details.links[key].url }) }}></i></td>
 
               </tr>
             ))}
@@ -218,16 +226,13 @@ const User_page = () => {
         </div>
       </Dialog>
 
-      <Dialog header={() => (<p className='font-bold'>Upload Document</p>)} visible={updateVisible} onHide={() => { setUpdateVisible(!updateVisible); setSelectedDocument({ id: '', url: '' }); setEdit(!edit); }} >
+      <Dialog header={() => (<p className='font-bold'>Upload Document</p>)} visible={updateVisible} onHide={() => { setUpdateVisible(!updateVisible); setSelectedDocument({ id: '', name: '', url: '' }); setEdit(!edit); }} >
         <div className="flex flex-col">
           <p className="w-fit mt-2 font-bold text-black">Document name</p>
           <input disabled={!edit} type="text" placeholder="Document Name *" name="name" value={selectedDocument.name || ""} onChange={handleInputChange} className="outline-none px-3 py-2 w-80 caret-slate-400 border-[1.5px] border-slate-400 focus:border-emerald-400 rounded-md" />
 
-          <p className="w-fit mt-2 font-bold text-black">Document URL</p>
-          <input disabled={!edit} type="text" placeholder="Document Name *" name="url" value={selectedDocument.url || ""} onChange={handleInputChange} className="outline-none px-3 py-2 w-80 caret-slate-400 border-[1.5px] border-slate-400 focus:border-emerald-400 rounded-md" />
-
           <div className="flex flex-row mx-auto">
-            {edit ? <button className="px-4 py-1 mt-6 w-fit mx-auto bg-emerald-400 text-slate-700 border rounded-md cursor-pointer" onClick={() => { setEdit(!edit); handleSubmit(); setUpdateVisible(!updateVisible); }} >Submit</button> : <button className="px-4 py-1 mt-6 w-fit mx-auto bg-emerald-400 text-slate-700 border rounded-md cursor-pointer" onClick={() => { setEdit(!edit); }} >Edit</button>}
+            {edit ? <button className="px-4 py-1 mt-6 w-fit mx-auto bg-emerald-400 text-slate-700 border rounded-md cursor-pointer" onClick={() => { setEdit(!edit); handleEditSubmit(); setUpdateVisible(!updateVisible); }} >Submit</button> : <button className="px-4 py-1 mt-6 w-fit mx-auto bg-emerald-400 text-slate-700 border rounded-md cursor-pointer" onClick={() => { setEdit(!edit); }} >Edit</button>}
           </div>
 
         </div>
