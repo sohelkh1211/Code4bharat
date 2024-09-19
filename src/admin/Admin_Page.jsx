@@ -15,16 +15,30 @@ const Admin_Page = () => {
   });
 
   const admin_details = useSelector((state) => state.admin);
-
-  const lists = [{
+  const [lists, setLists] = useState([{
     id: '1211',
     links: ['https://tinyurl.com/33zhf9de', 'https://tinyurl.com/4ury6ps8']
   }, {
     id: '1011',
     links: ['https://tinyurl.com/w398thcn']
-  }];
+  }]);
 
-  console.log(selectedDocument);
+  const handleDelete = () => {
+    setLists(lists.map(list => {
+      if (selectedDocument.id === list.id) {
+        return {
+          ...list,
+          links: list.links.filter(link => link !== selectedDocument.url)
+        };
+      }
+      return list;
+    }));
+  };
+
+  // console.log("Selected Document",selectedDocument);
+
+  // console.log("Lists", lists);
+
   return (
     <div className='flex flex-col w-fit mx-auto mt-10'>
       <h1 className='text-[32px] font-bold text-center'>Welcome {admin_details.name}</h1>
@@ -66,7 +80,7 @@ const Admin_Page = () => {
         <div className='flex flex-col'>
           <h1 className='font-bold'>Are you sure you want to remove this document ?</h1>
           <div className='flex flex-row gap-x-4 mt-4 mb-2 mx-auto'>
-            <button className='px-2 py-0.5 font-bold text-gray-800 rounded-md bg-emerald-300' onClick={() => { toast.success("Yes Clicked"); setVisible(!visible); }}>Yes</button>
+            <button className='px-2 py-0.5 font-bold text-gray-800 rounded-md bg-emerald-300' onClick={() => { handleDelete(); toast.success("Yes Clicked"); setVisible(!visible); }}>Yes</button>
             <button className='px-2 py-0.5 font-bold text-gray-800 rounded-md bg-red-400' onClick={() => { toast.success("No Clicked"); setVisible(!visible); setSelectedDocument({ id: '', url: '' }) }}>No</button>
           </div>
         </div>
