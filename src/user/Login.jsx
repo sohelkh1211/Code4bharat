@@ -77,7 +77,7 @@ const Login = () => {
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ token: data.idToken }),
+                        body: JSON.stringify({ id: data.localId }),
                         credentials: 'include' // It allows backend to set token as cookie
                     });
 
@@ -110,7 +110,6 @@ const Login = () => {
             }
         }
     }
-    console.log(user_details);
 
     return (
         <div className='flex flex-col items-center p-6 w-fit mt-32 mx-auto border rounded-md'>

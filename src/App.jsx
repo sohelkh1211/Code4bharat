@@ -9,7 +9,11 @@ import User_page from "./user/User_page";
 
 // Admin
 import Admin_login from "./admin/Admin_login"
+import Admin_Signup from './admin/Admin_Signup'
 import Admin_Page from "./admin/Admin_Page"
+
+import ProtectedRoute from './ProtectedRoute'
+
 
 function App() {
 
@@ -45,9 +49,22 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/user/signup" element={<Signup />} />
         <Route path="/user/login" element={<Login />} />
-        <Route path='/user/profile' element={<User_page />} />
+        <Route path='/user/profile' element={
+          <ProtectedRoute allowedRole='user'>
+            <User_page />
+          </ProtectedRoute>
+        }
+        />
+        {/* <Route path='/user/profile' element={<User_page />} /> */}
 
+        <Route path='/admin/signup' element={<Admin_Signup />} />
         <Route path="/admin/login" element={<Admin_login />} />
+        <Route path='/admin/profile' element={
+          <ProtectedRoute allowedRole='admin'>
+            <Admin_Page />
+          </ProtectedRoute>
+        } />
+
       </Routes>
     </BrowserRouter>
   )
