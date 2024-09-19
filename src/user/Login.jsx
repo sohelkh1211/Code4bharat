@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import toast from "react-hot-toast";
 import 'primeicons/primeicons.css';
 
-import { db } from "../firebase";
+import { userDB } from "../firebase";
 import { ref as dbRef, get } from "firebase/database";
 
 const Login = () => {
@@ -81,7 +81,10 @@ const Login = () => {
                         credentials: 'include' // It allows backend to set token as cookie
                     });
 
+                    const backendData = await backendResponse.json();
+
                     if (backendResponse.ok) {
+                        dispatch(token(backendData.token));
                         console.log("Cookie set");
                     } else {
                         toast.error("Something went wrong with setting cookie");
@@ -93,7 +96,7 @@ const Login = () => {
                     return;
                 }
 
-                const userRef = dbRef(db, `UserData/${data.localId}`);
+                const userRef = dbRef(userDB, `UserData/${data.localId}`);
                 const snapshot = await get(userRef);
                 let res = await snapshot.val();
 
@@ -101,7 +104,6 @@ const Login = () => {
 
                 localStorage.setItem('user', JSON.stringify({ id: data.localId, name: res.name, email: data.email, links: res?.links ? links : [] }));
 
-                dispatch(token(data.idToken));
                 toast.success('LoggedIn Successful');
                 navigate('/user/profile', { replace: true });
             }

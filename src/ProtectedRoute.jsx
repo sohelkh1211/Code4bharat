@@ -24,19 +24,21 @@ const ProtectedRoute = ({ children, allowedRole }) => {
 
                 const data = await response.json();
 
+                // console.log(data);
+
                 if (response.status === 200) {
                     dispatch(token(data.token));
                 } else {
-                    toast.error(data.message);
+                    return toast.error(data.message);
                 }
 
-                let role = jwtDecode(data.token).role;
+                let role = jwtDecode(data?.token)?.role;
 
                 if (role === 'user') {
                     const user_details = JSON.parse(localStorage.getItem('user'));
                     dispatch(user(user_details));
                 }
-                else {
+                else if(role === 'admin') {
                     const admin_details = JSON.parse(localStorage.getItem('admin'));
                     dispatch(admin(admin_details));
                 }

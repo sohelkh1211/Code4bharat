@@ -5,7 +5,7 @@ import document from "../assets/work.png";
 import toast from "react-hot-toast";
 import 'primeicons/primeicons.css';
 
-import { db } from "../firebase";
+import { userDB } from "../firebase";
 import { ref as dbRef, set } from "firebase/database";
 
 const Signup = () => {
@@ -76,7 +76,7 @@ const Signup = () => {
 
         const data = await response.json();
 
-        const userRef = dbRef(db, `UserData/${data.localId}`); // To get reference to firebase database with url as "db/UserData/${data.localId}"
+        const userRef = dbRef(userDB, `UserData/${data.localId}`); // To get reference to firebase database with url as "db/UserData/${data.localId}"
 
         if (response.ok) {
           try {

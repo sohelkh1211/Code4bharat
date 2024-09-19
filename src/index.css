@@ -11,3 +11,14 @@
     scroll-behavior: smooth;
     font-family: "Merriweather", serif;
 }
+
+.p-dialog-header {
+    padding: 10px 10px;
+  }
+  
+  .p-dialog-content {
+    padding-bottom: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  

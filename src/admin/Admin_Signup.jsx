@@ -3,7 +3,7 @@ import document from '../assets/work.png';
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-import { db } from "../firebase";
+import { adminDB } from "../firebase";
 import { ref as dbRef, set } from "firebase/database";
 
 const Admin_Signup = () => {
@@ -62,7 +62,7 @@ const Admin_Signup = () => {
 
         if (Object.keys(newErrors).length === 0) {
             try {
-                const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${import.meta.env.VITE_API_KEY}`, {
+                const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${import.meta.env.VITE_ADMIN_KEY}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -72,7 +72,7 @@ const Admin_Signup = () => {
 
                 const data = await response.json();
 
-                const userRef = dbRef(db, `AdminData/${data.localId}`); // To get reference to firebase database with url as "db/UserData/${data.localId}"
+                const userRef = dbRef(adminDB, `AdminData/${data.localId}`); // To get reference to firebase database with url as "db/UserData/${data.localId}"
 
                 if (response.ok) {
                     try {

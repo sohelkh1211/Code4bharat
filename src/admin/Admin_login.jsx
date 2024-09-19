@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { admin, token } from "../actions";
 import toast from "react-hot-toast";
 
-import { db } from "../firebase";
+import { adminDB } from "../firebase";
 import { ref as dbRef, get } from "firebase/database";
 
 const Admin_login = () => {
@@ -48,7 +48,7 @@ const Admin_login = () => {
 
         if (Object.keys(newErrors).length === 0) {
             try {
-                const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${import.meta.env.VITE_API_KEY}`, {
+                const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${import.meta.env.VITE_ADMIN_KEY}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -66,7 +66,7 @@ const Admin_login = () => {
                 }
 
                 try {
-                    const backendResponse = await fetch('http://localhost:3000/api/auth/login', {
+                    const backendResponse = await fetch('http://localhost:3000/api/auth/admin_login', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -75,7 +75,10 @@ const Admin_login = () => {
                         credentials: 'include' // It allows backend to set token as cookie
                     });
 
+                    const backendData = await backendResponse.json();
+
                     if (backendResponse.ok) {
+                        dispatch(token(backendData.token));
                         console.log("Cookie set");
                     } else {
                         toast.error("Something went wrong with setting cookie");
@@ -87,7 +90,7 @@ const Admin_login = () => {
                     return;
                 }
 
-                const userRef = dbRef(db, `AdminData/${data.localId}`);
+                const userRef = dbRef(adminDB, `AdminData/${data.localId}`);
                 const snapshot = await get(userRef);
                 let res = await snapshot.val();
 
@@ -95,7 +98,6 @@ const Admin_login = () => {
 
                 localStorage.setItem('admin', JSON.stringify({ id: data.localId, name: res.name, email: data.email, lists: res?.lists ? lists : [] }));
 
-                dispatch(token(data.idToken));
                 toast.success('LoggedIn Successful');
                 navigate('/admin/profile', { replace: true });
             }
@@ -115,7 +117,7 @@ const Admin_login = () => {
                 <input type="password" name="password" placeholder="Password *" onChange={handleInputChange} className={`outline-none w-80 caret-slate-400 p-2 border-[1.5px] ${errors.password ? 'border-red-500' : 'border-slate-400'} focus:border-emerald-500 rounded-md`} />
                 {errors.password && <span className="absolute mt-[99px] text-[12px] text-red-500">{errors.password}</span>}
                 {/* <input type="text" name="secret_key" placeholder="Secret Key *" className={`outline-none w-80 caret-slate-400 p-2 border-[1.5px] ${ errors.secret_key ? 'border-red-500' : 'border-slate-400' } focus:border-emerald-500 rounded-md`} /> */}
-                <input type="submit" value="Login" className="bg-emerald-400 hover:scale-[104%] hover:text-[18px] text-slate-800 p-2 rounded-md cursor-pointer" />
+                <input type="submit" value="Login" className="bg-emerald-400 active:scale-75 hover:text-[18px] text-slate-800 p-2 rounded-md cursor-pointer" />
             </form>
             <p className="mt-2 text-[14px] text-slate-600">New admin? <a href="/admin/signup" className="underline text-blue-600">Signup</a></p>
         </div>
