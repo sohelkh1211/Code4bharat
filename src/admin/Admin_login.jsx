@@ -12,6 +12,7 @@ const Admin_login = () => {
     const dispatch = useDispatch();
 
     const new_admin = useSelector((state) => state.admin);
+    const [show, setShow] = useState(false);
 
     const [userCredentials, setUserCredentials] = useState({
         email: '',
@@ -90,13 +91,13 @@ const Admin_login = () => {
                     return;
                 }
 
-                const userRef = dbRef(adminDB, `AdminData/${data.localId}`);
-                const snapshot = await get(userRef);
-                let res = await snapshot.val();
+                const adminRef = dbRef(adminDB, `AdminData/${data.localId}`);
+                const admin_snapshot = await get(adminRef);
+                let admin_res = await admin_snapshot.val();
 
-                dispatch(admin({ id: data.localId, name: res.name, email: data.email, lists: res?.lists ? res.lists : [] }));
+                dispatch(admin({ id: data.localId, name: admin_res.name, email: data.email, lists: admin_res?.lists ? admin_res.lists : [] }));
 
-                localStorage.setItem('admin', JSON.stringify({ id: data.localId, name: res.name, email: data.email, lists: res?.lists ? lists : [] }));
+                localStorage.setItem('admin', JSON.stringify({ id: data.localId, name: admin_res.name, email: data.email, lists: admin_res?.lists ? lists : [] }));
 
                 toast.success('LoggedIn Successful');
                 navigate('/admin/profile', { replace: true });
@@ -114,9 +115,13 @@ const Admin_login = () => {
             <form onSubmit={handleSubmit} className="flex flex-col gap-y-4 mt-6 ">
                 <input type="text" name="email" placeholder="Email *" onChange={handleInputChange} className={`outline-none w-80 caret-slate-400 p-2 border-[1.5px] ${errors.email ? 'border-red-500' : 'border-slate-400'} focus:border-emerald-500  rounded-md`} />
                 {errors.email && <span className="absolute mt-[41px] text-[12px] text-red-500">{errors.email}</span>}
-                <input type="password" name="password" placeholder="Password *" onChange={handleInputChange} className={`outline-none w-80 caret-slate-400 p-2 border-[1.5px] ${errors.password ? 'border-red-500' : 'border-slate-400'} focus:border-emerald-500 rounded-md`} />
-                {errors.password && <span className="absolute mt-[99px] text-[12px] text-red-500">{errors.password}</span>}
-                {/* <input type="text" name="secret_key" placeholder="Secret Key *" className={`outline-none w-80 caret-slate-400 p-2 border-[1.5px] ${ errors.secret_key ? 'border-red-500' : 'border-slate-400' } focus:border-emerald-500 rounded-md`} /> */}
+
+
+                <input type={`${show ? 'text' : 'password'}`} name="password" placeholder="Password *" onChange={handleInputChange} className={`outline-none w-80 caret-slate-400 p-2 border-[1.5px] ${errors.password ? 'border-red-500' : 'border-slate-400'} focus:border-green-600 rounded-md`} />
+                {errors.password && <span className="absolute mt-[96px] text-[12px] text-red-500">{errors.password}</span>}
+                {show ? <i className="absolute mt-[73px] ml-[290px] text-slate-400 pi pi-eye cursor-pointer" onClick={() => setShow(!show)} /> : <i className="absolute mt-[73px] ml-[290px] text-slate-400 pi pi-eye-slash cursor-pointer" onClick={() => setShow(!show)} />}
+                
+
                 <input type="submit" value="Login" className="bg-emerald-400 active:scale-75 hover:text-[18px] text-slate-800 p-2 rounded-md cursor-pointer" />
             </form>
             <p className="mt-2 text-[14px] text-slate-600">New admin? <a href="/admin/signup" className="underline text-blue-600">Signup</a></p>

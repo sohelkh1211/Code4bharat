@@ -15,6 +15,8 @@ const Admin_Signup = () => {
         confirm_password: ''
     });
 
+    const [show, setShow] = useState(false);
+
     const [errors, setErrors] = useState({});
 
     const handleInputChange = (e) => {
@@ -115,9 +117,9 @@ const Admin_Signup = () => {
                     <input type="email" name="email" placeholder="Email *" onChange={handleInputChange} className={`outline-none w-80 p-2 caret-slate-400 border-[1.5px] ${errors.email ? 'border-red-500' : 'border-slate-400'} focus:border-emerald-500 rounded-md`} />
                     {errors.email && <span className="absolute mt-[99px] text-[12px] text-red-500">{errors.email}</span>}
 
-                    <input type="password" name="password" placeholder="Password *" onChange={handleInputChange} className={`outline-none w-80 p-2 caret-slate-400 border-[1.5px] ${errors.password ? 'border-red-500' : 'border-slate-400'} focus:border-emerald-500 rounded-md`} />
-                    {errors.password && <span className="absolute mt-[158px] text-[12px] text-red-500">{errors.password}</span>}
-
+                    <input type={`${show ? 'text' : 'password'}`} name="password" placeholder="Password *" onChange={handleInputChange} className={`outline-none w-80 p-2 caret-slate-400 border-[1.5px]  ${errors.password ? 'border-red-500' : 'border-slate-400'} focus:border-emerald-500 rounded-md`} />
+                    {errors.password && <span className="absolute mt-[160px] text-[12px] text-red-500">{errors.password}</span>}
+                    {show ? <i className="absolute mt-[130px] ml-[290px] text-slate-400 pi pi-eye cursor-pointer" onClick={() => setShow(!show)} /> : <i className="absolute mt-[130px] ml-[290px] text-slate-400 pi pi-eye-slash cursor-pointer" onClick={() => setShow(!show)} />}
                     <input type="password" name="confirm_password" placeholder="Change Password *" onChange={handleInputChange} className={`outline-none w-80 p-2 caret-slate-400 border-[1.5px] ${errors.confirm_password ? 'border-red-500' : 'border-slate-400'} focus:border-emerald-500 rounded-md`} />
                     {errors.confirm_password && <span className="absolute mt-[216px] text-[12px] text-red-500">{errors.confirm_password}</span>}
 
